@@ -1,0 +1,48 @@
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "com.gradle.publish:plugin-publish-plugin:0.9.4"
+  }
+}
+
+apply plugin: "com.gradle.plugin-publish"
+
+apply plugin: 'java'
+
+dependencies {
+    compile gradleApi()
+}
+
+apply plugin: 'maven'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    compile 'com.speedment:speedment:2.2.3'
+    testCompile 'junit:junit:4.12'
+}
+
+group = 'com.speedment.gradle'
+version = '2.2.3'
+description='Gradle Support for Speedment.'
+
+pluginBundle {
+  website = 'http://www.speedment.com/'
+  vcsUrl = 'https://github.com/speedment'
+  description = 'Wrap your Database in Java 8'
+  tags = ['database', 'speedment']
+
+  plugins {
+      SpeedmentGradlePlugin {
+      id = 'com.speedment.gradle'
+      displayName = 'Speedment Gradle Plugin'
+    }
+  }
+}
