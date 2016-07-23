@@ -1,32 +1,50 @@
+# Speedment Gradle plugin
 
 [![Join the chat at https://gitter.im/speedment/speedment](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/speedment/speedment?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-# speedment-gradle-plugin
-This small plugin makes it possible to run Speedment as a Maven goal in your IDE. All you have to do is add the following code to your projects ```build.gradle```-file:
-```xml
+Plugin adds Gradle tasks to run Speedment GUI and to generate source files from configuration.
+
+# Getting Started
+
+Add and apply plugin in your project's `build.gradle` file.
+
+
+````groovy
 buildscript {
-  repositories {
-    maven {
-      url "https://plugins.gradle.org/m2/"
+    repositories {
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
     }
-  }
-  dependencies {
-    classpath "gradle.plugin.com.speedment.gradle:SpeedmentGradlePlugin:2.2.3"
-  }
+    dependencies {
+        classpath 'gradle.plugin.com.speedment.gradle:SpeedmentGradlePlugin:2.3.5'
+    }
 }
 
-apply plugin: "com.speedment.gradle"
-```
+// Optional path to config file. Default is: src/main/json/speedment.json
+//ext {
+//    speedmentConfigFile = '/path/to/my/config/file.json'
+//}
 
-This will add two new goals, one that launches the Speedment GUI and one that generates code from a ```.groovy```-file.
+apply plugin: 'com.speedment.gradle'
 
+// ...
 
-### License
+dependencies {
+    compile('com.speedment:speedment:2.3.5')
+}
+````
+
+Then call one of two new targets.
+
+* `gradle speedment.Gui` Opens Speedment GUI.
+* `gradle speedment.Generate` Generates Java classes from config file.
+
+## License
 
 Speedment is available under the Apache 2 License.
 
-
-### Copyright
+## Copyright
 
 Copyright (c) 2006-2016, Speedment, Inc. All Rights Reserved.
 
