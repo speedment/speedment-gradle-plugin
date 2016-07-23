@@ -4,7 +4,7 @@
 
 Plugin adds Gradle tasks to run Speedment GUI and to generate source files from configuration.
 
-# Getting Started
+## Getting Started
 
 Add and apply plugin in your project's `build.gradle` file.
 
