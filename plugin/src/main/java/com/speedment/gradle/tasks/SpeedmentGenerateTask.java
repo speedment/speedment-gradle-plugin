@@ -1,13 +1,12 @@
 /**
- *
  * Copyright (c) 2006-2016, Speedment, Inc. All Rights Reserved.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); You may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at:
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,47 +15,46 @@
  */
 package com.speedment.gradle.tasks;
 
-import com.speedment.internal.core.platform.SpeedmentFactory;
-import org.gradle.api.tasks.Input;
-import org.gradle.api.tasks.TaskAction;
 import com.speedment.Speedment;
-import com.speedment.config.Project;
-import com.speedment.internal.core.code.MainGenerator;
-import com.speedment.internal.core.config.utils.GroovyParser;
-import java.io.File;
-import java.io.IOException;
+import com.speedment.config.db.Project;
+import com.speedment.gradle.utils.SpeedmentConfig;
+import com.speedment.gradle.utils.SpeedmentInitializer;
+import com.speedment.internal.core.config.db.immutable.ImmutableProject;
+import com.speedment.internal.util.document.DocumentTranscoder;
+import org.gradle.api.DefaultTask;
+import org.gradle.api.tasks.TaskAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Sergio Figueras (sergio@yourecm.com)
  */
-public class SpeedmentGenerateTask extends AbstractSpeedmentTask {
+public class SpeedmentGenerateTask extends DefaultTask {
 
-    @Input
-    protected String groovyFile = com.speedment.internal.ui.UISession.DEFAULT_GROOVY_LOCATION;
+    private static final Logger LOGGER = LoggerFactory.getLogger(SpeedmentGenerateTask.class);
+    public static final String SPEEDMENT_GENERATE_TASK_NAME = "speedment.Generate";
 
     @TaskAction
-    protected void javaTask(){
-        Speedment speedment = SpeedmentFactory.newSpeedmentInstance();
-        if (hasGroovyFile()) {
-            try {
-                final Project p = GroovyParser.projectFromGroovy(speedment, getGroovyLocation().toPath());
-                new MainGenerator(speedment).accept(p);
-            } catch (IOException ex) {
-                getLogger().error("IOException thrown when parsing Groovy-file.");
-            }
+    protected void generateCode() {
+        SpeedmentConfig config = SpeedmentConfig.create(getProject());
+        LOGGER.info("Generating code using {} config file.", config);
+
+        if (config.canAccess()) {
+            Speedment speedment = SpeedmentInitializer.initialize(config);
+
+            final Project p = DocumentTranscoder.load(config.toPath());
+            final Project immutableProject = ImmutableProject.wrap(p);
+            speedment.getProjectComponent().setProject(immutableProject);
+            speedment.getCodeGenerationComponent().getTranslatorManager().accept(immutableProject);
         } else {
-            getLogger().error("To run speedment:generate a valid .groovy-file need to be specified.");
+            String message = String.format("To run %s task a valid config file has to be specified! File %s is not valid!", SPEEDMENT_GENERATE_TASK_NAME, config);
+            throw new IllegalArgumentException(message);
         }
     }
 
     @Override
-    protected File getGroovyLocation() {
-        return new File(groovyFile);
-    }
-
-    @Override
     public String getDescription() {
-        return "Runs Speedment generate.";
+        return "Generates code.";
     }
 }
