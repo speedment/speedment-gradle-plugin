@@ -43,4 +43,18 @@ public class PluginUtils {
         }
         return defaultValue;
     }
+
+    public static void setExtraProperty(Project project, String propertyName, String propertyValue) {
+        LOGGER.debug("Setting extra property " + propertyName + "=" + propertyValue + " to project " + project.getName());
+        ExtraPropertiesExtension ext = project.getExtensions().getExtraProperties();
+        if (ext != null) {
+            if (ext.has(propertyName)) {
+                LOGGER.warn("Extra property " + propertyName + " is already set it will be overwritten.");
+            }
+
+            ext.set(propertyName, propertyValue);
+        } else {
+            LOGGER.debug("Extra properties in project " + project.getName() + " are not available.");
+        }
+    }
 }

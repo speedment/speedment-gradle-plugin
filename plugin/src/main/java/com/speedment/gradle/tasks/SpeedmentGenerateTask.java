@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author Sergio Figueras (sergio@yourecm.com)
  */
 public class SpeedmentGenerateTask extends DefaultTask {
@@ -36,21 +35,25 @@ public class SpeedmentGenerateTask extends DefaultTask {
     public static final String SPEEDMENT_GENERATE_TASK_NAME = "speedment.Generate";
 
     @TaskAction
-    protected void generateCode() {
+    public void validateConfigAndGenerateCode() {
         SpeedmentConfig config = SpeedmentConfig.create(getProject());
         LOGGER.info("Generating code using {} config file.", config);
 
         if (config.canAccess()) {
-            Speedment speedment = SpeedmentInitializer.initialize(config);
-
-            final Project p = DocumentTranscoder.load(config.toPath());
-            final Project immutableProject = ImmutableProject.wrap(p);
-            speedment.getProjectComponent().setProject(immutableProject);
-            speedment.getCodeGenerationComponent().getTranslatorManager().accept(immutableProject);
+            generateCode(config);
         } else {
             String message = String.format("To run %s task a valid config file has to be specified! File %s is not valid!", SPEEDMENT_GENERATE_TASK_NAME, config);
             throw new IllegalArgumentException(message);
         }
+    }
+
+    void generateCode(SpeedmentConfig config) {
+        Speedment speedment = SpeedmentInitializer.initialize(config);
+
+        final Project speedmentProject = DocumentTranscoder.load(config.toPath());
+        final Project immutableProject = ImmutableProject.wrap(speedmentProject);
+        speedment.getProjectComponent().setProject(immutableProject);
+        speedment.getCodeGenerationComponent().getTranslatorManager().accept(immutableProject);
     }
 
     @Override

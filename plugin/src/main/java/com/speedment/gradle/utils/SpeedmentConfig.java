@@ -51,6 +51,10 @@ public class SpeedmentConfig {
         return true;
     }
 
+    public String getPath() {
+        return configFile.getPath();
+    }
+
     public String getAbsolutePath() {
         return configFile.getAbsolutePath();
     }
