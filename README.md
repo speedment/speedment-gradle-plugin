@@ -23,6 +23,8 @@ buildscript {
     }
 }
 
+// Optional custom component include.
+// include my.company.CustomComponentConstructor
 
 //ext {
 //    Optional path to config file. Default is: src/main/json/speedment.json
@@ -40,6 +42,8 @@ apply plugin: 'com.speedment.gradle'
 
 dependencies {
     compile('com.speedment:speedment:2.3.5')
+    // Optional dependency to library with custom components.
+    // compile files('custom-components.jar')
 }
 ````
 
