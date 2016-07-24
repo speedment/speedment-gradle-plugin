@@ -17,7 +17,8 @@ package com.speedment.gradle.tasks;
 
 import com.speedment.Speedment;
 import com.speedment.config.db.Project;
-import com.speedment.gradle.utils.SpeedmentConfig;
+import com.speedment.gradle.utils.ComponentConstructorsProvider;
+import com.speedment.gradle.utils.ConfigFileProvider;
 import com.speedment.gradle.utils.SpeedmentInitializer;
 import com.speedment.internal.core.config.db.immutable.ImmutableProject;
 import com.speedment.internal.util.document.DocumentTranscoder;
@@ -36,19 +37,20 @@ public class SpeedmentGenerateTask extends DefaultTask {
 
     @TaskAction
     public void validateConfigAndGenerateCode() {
-        SpeedmentConfig config = SpeedmentConfig.create(getProject());
-        LOGGER.info("Generating code using {} config file.", config);
+        ConfigFileProvider config = ConfigFileProvider.create(getProject());
+        ComponentConstructorsProvider componentConstructors = ComponentConstructorsProvider.create(getProject());
+        LOGGER.info("Generating code using {} config file and {} component constructors.", config, componentConstructors);
 
         if (config.canAccess()) {
-            generateCode(config);
+            generateCode(config, componentConstructors);
         } else {
             String message = String.format("To run %s task a valid config file has to be specified! File %s is not valid!", SPEEDMENT_GENERATE_TASK_NAME, config);
             throw new IllegalArgumentException(message);
         }
     }
 
-    void generateCode(SpeedmentConfig config) {
-        Speedment speedment = SpeedmentInitializer.initialize(config);
+    void generateCode(ConfigFileProvider config, ComponentConstructorsProvider componentConstructors) {
+        Speedment speedment = SpeedmentInitializer.initialize(config, componentConstructors);
 
         final Project speedmentProject = DocumentTranscoder.load(config.toPath());
         final Project immutableProject = ImmutableProject.wrap(speedmentProject);

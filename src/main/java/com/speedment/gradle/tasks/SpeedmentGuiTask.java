@@ -16,11 +16,14 @@
 package com.speedment.gradle.tasks;
 
 import com.speedment.Speedment;
-import com.speedment.gradle.utils.SpeedmentConfig;
+import com.speedment.gradle.utils.ComponentConstructorsProvider;
+import com.speedment.gradle.utils.ConfigFileProvider;
 import com.speedment.gradle.utils.SpeedmentInitializer;
 import com.speedment.internal.ui.MainApp;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static javafx.application.Application.launch;
 
@@ -29,12 +32,16 @@ import static javafx.application.Application.launch;
  */
 public class SpeedmentGuiTask extends DefaultTask {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SpeedmentGuiTask.class);
     public static final String SPEEDMENT_GUI_TASK_NAME = "speedment.Gui";
 
     @TaskAction
     protected void openGui() {
-        SpeedmentConfig config = SpeedmentConfig.create(getProject());
-        Speedment speedment = SpeedmentInitializer.initialize(config);
+        ConfigFileProvider config = ConfigFileProvider.create(getProject());
+        ComponentConstructorsProvider componentConstructors = ComponentConstructorsProvider.create(getProject());
+        LOGGER.info("Starting GUI using {} config file and {} component constructors.", config, componentConstructors);
+
+        Speedment speedment = SpeedmentInitializer.initialize(config, componentConstructors);
 
         MainApp.setSpeedment(speedment);
         if (config.canAccess()) {

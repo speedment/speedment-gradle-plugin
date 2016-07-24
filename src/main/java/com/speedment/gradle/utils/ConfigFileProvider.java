@@ -24,20 +24,20 @@ import java.nio.file.Path;
 
 import static com.speedment.internal.ui.UISession.DEFAULT_CONFIG_LOCATION;
 
-public class SpeedmentConfig {
+public class ConfigFileProvider {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SpeedmentConfig.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigFileProvider.class);
     public static final String CONFIG_PATH_PROPERTY = "speedmentConfigFile";
 
     private final File configFile;
 
-    public SpeedmentConfig(String configPath) {
+    public ConfigFileProvider(String configPath) {
         this.configFile = new File(configPath);
     }
 
-    public static SpeedmentConfig create(Project project) {
-        String configPath = PluginUtils.getExtraProperty(project, CONFIG_PATH_PROPERTY, DEFAULT_CONFIG_LOCATION);
-        return new SpeedmentConfig(configPath);
+    public static ConfigFileProvider create(Project project) {
+        String configPath = PluginUtils.getExtraProperty(project, CONFIG_PATH_PROPERTY, DEFAULT_CONFIG_LOCATION, String.class);
+        return new ConfigFileProvider(configPath);
     }
 
     public boolean canAccess() {

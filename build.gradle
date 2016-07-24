@@ -29,6 +29,10 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
+jar {
+    baseName = 'SpeedmentGradlePlugin'
+}
+
 pluginBundle {
     website = 'http://www.speedment.com/'
     vcsUrl = 'https://github.com/speedment'

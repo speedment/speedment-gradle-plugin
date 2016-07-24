@@ -20,8 +20,9 @@ import com.speedment.internal.core.runtime.DefaultSpeedmentApplicationLifecycle;
 
 public class SpeedmentInitializer {
 
-    public static Speedment initialize(SpeedmentConfig config) {
+    public static Speedment initialize(ConfigFileProvider config, ComponentConstructorsProvider componentConstructorsProvider) {
         final DefaultSpeedmentApplicationLifecycle lifecycle = new DefaultSpeedmentApplicationLifecycle(config.getAccessibleFileOrNull());
+        componentConstructorsProvider.getComponentConstructors().forEach(lifecycle::with);
         return lifecycle.build();
     }
 }

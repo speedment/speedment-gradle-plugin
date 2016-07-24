@@ -18,12 +18,20 @@ buildscript {
     }
     dependencies {
         classpath 'gradle.plugin.com.speedment.gradle:SpeedmentGradlePlugin:2.3.5'
+        // Optional dependency to library with custom components.
+        // classpath files('custom-components.jar')
     }
 }
 
-// Optional path to config file. Default is: src/main/json/speedment.json
+
 //ext {
+//    Optional path to config file. Default is: src/main/json/speedment.json
 //    speedmentConfigFile = '/path/to/my/config/file.json'
+//
+//    Optional list of components. See http://www.ageofjava.com/2016/04/how-to-generate-customized-java-8-code.html
+//    speedmentComponentConstructors = [
+//            new CustomComponentConstructor()
+//    ]
 //}
 
 apply plugin: 'com.speedment.gradle'

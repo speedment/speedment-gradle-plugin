@@ -6,21 +6,21 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.speedment.gradle.utils.SpeedmentConfig.CONFIG_PATH_PROPERTY;
+import static com.speedment.gradle.utils.ConfigFileProvider.CONFIG_PATH_PROPERTY;
 import static com.speedment.internal.ui.UISession.DEFAULT_CONFIG_LOCATION;
 
-public class SpeedmentConfigTest {
+public class ConfigFileProviderTest {
 
     private Project testProject;
 
     @Before
     public void prepareTestProject() {
-        testProject = ProjectBuilder.builder().withName("testProject").build();
+        testProject = ProjectBuilder.builder().build();
     }
 
     @Test
     public void testDefaultConfigPath() {
-        SpeedmentConfig config = SpeedmentConfig.create(testProject);
+        ConfigFileProvider config = ConfigFileProvider.create(testProject);
         Assert.assertEquals(config.getPath(), DEFAULT_CONFIG_LOCATION);
     }
 
@@ -29,7 +29,7 @@ public class SpeedmentConfigTest {
         String customConfigPath = "/a/b/c/config.json";
         PluginUtils.setExtraProperty(testProject, CONFIG_PATH_PROPERTY, customConfigPath);
 
-        SpeedmentConfig config = SpeedmentConfig.create(testProject);
+        ConfigFileProvider config = ConfigFileProvider.create(testProject);
         Assert.assertEquals(customConfigPath, config.getPath());
     }
 }
