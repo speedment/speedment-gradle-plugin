@@ -47,7 +47,7 @@ dependencies {
 }
 ````
 
-Then call one of two new targets.
+Then call one of two new tasks.
 
 * `gradle speedment.Gui` Opens Speedment GUI.
 * `gradle speedment.Generate` Generates Java classes from config file.
