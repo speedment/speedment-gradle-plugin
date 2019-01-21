@@ -58,6 +58,7 @@ public class SpeedmentGenerateTest {
     @Test
     public void generateCodeTest() {
         final SpeedmentGenerateTask task = getTask(testProject);
+        task.setConfigFile(configFile);
         task.execute();
 
         Assert.assertTrue(targetDirectory.exists());
