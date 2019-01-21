@@ -3,3 +3,5 @@
 .DS_Store
 build/
 *.iml
+tmp/
+out/
