@@ -15,47 +15,35 @@
  */
 package com.speedment.gradle.tasks;
 
-import com.speedment.gradle.utils.ComponentConstructorsProvider;
-import com.speedment.gradle.utils.ConfigFileProvider;
-import com.speedment.gradle.utils.SpeedmentInitializer;
+import com.speedment.generator.translator.TranslatorManager;
 import com.speedment.runtime.config.Project;
-import com.speedment.runtime.config.internal.immutable.ImmutableProject;
-import com.speedment.runtime.config.util.DocumentTranscoder;
 import com.speedment.runtime.core.Speedment;
-import org.gradle.api.DefaultTask;
-import org.gradle.api.tasks.TaskAction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.speedment.runtime.core.component.ProjectComponent;
+import org.gradle.api.GradleScriptException;
 
 /**
  * @author Sergio Figueras (sergio@yourecm.com)
+ * @author Emil Forslund
  */
-public class SpeedmentGenerateTask extends DefaultTask {
-//
-    private static final Logger LOGGER = LoggerFactory.getLogger(SpeedmentGenerateTask.class);
+public class SpeedmentGenerateTask extends AbstractSpeedmentTask {
+
     public static final String SPEEDMENT_GENERATE_TASK_NAME = "speedment.Generate";
 
-    @TaskAction
-    public void validateConfigAndGenerateCode() {
-        ConfigFileProvider config = ConfigFileProvider.create(getProject());
-        ComponentConstructorsProvider componentConstructors = ComponentConstructorsProvider.create(getProject());
-        LOGGER.info("Generating code using {} config file and {} component constructors.", config, componentConstructors);
+    @Override
+    protected void execute(Speedment speedment) {
+        getLogger().info("Generating code using JSON configuration file: '{}'.",
+            configLocation().toAbsolutePath());
 
-        if (config.canAccess()) {
-            generateCode(config, componentConstructors);
-        } else {
-            String message = String.format("To run %s task a valid config file has to be specified! File %s is not valid!", SPEEDMENT_GENERATE_TASK_NAME, config);
-            throw new IllegalArgumentException(message);
+        assertHasConfigFile();
+        try {
+            final Project project = speedment.getOrThrow(ProjectComponent.class).getProject();
+            speedment.getOrThrow(TranslatorManager.class).accept(project);
+            // TODO: Check if the generated sources needs to be added somewhere for later tasks to find them
+        } catch (final Exception ex) {
+            final String err = "Error parsing configFile file.";
+            getLogger().error(err);
+            throw new GradleScriptException(err, ex);
         }
-    }
-
-    void generateCode(ConfigFileProvider config, ComponentConstructorsProvider componentConstructors) {
-        Speedment speedment = SpeedmentInitializer.initialize(config, componentConstructors);
-
-        final Project speedmentProject = DocumentTranscoder.load(config.toPath());
-        final Project immutableProject = ImmutableProject.wrap(speedmentProject);
-        speedment.getProjectComponent().setProject(immutableProject);
-        speedment.getCodeGenerationComponent().getTranslatorManager().accept(immutableProject);
     }
 
     @Override

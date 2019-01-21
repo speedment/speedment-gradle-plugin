@@ -29,7 +29,7 @@ public class SpeedmentPlugin implements Plugin<Project> {
 
     @Override
     public void apply(Project target) {
-        target.getTasks().create(SpeedmentToolTask.SPEEDMENT_GUI_TASK_NAME, SpeedmentToolTask.class);
+        target.getTasks().create(SpeedmentToolTask.SPEEDMENT_TOOL_TASK_NAME, SpeedmentToolTask.class);
         target.getTasks().create(SpeedmentGenerateTask.SPEEDMENT_GENERATE_TASK_NAME, SpeedmentGenerateTask.class);
     }
 

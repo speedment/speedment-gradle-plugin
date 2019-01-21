@@ -16,16 +16,14 @@
 package com.speedment.gradle.utils;
 
 
-import com.speedment.runtime.core.Speedment;
-
 public class SpeedmentInitializer {
-
-    public static Speedment initialize(ConfigFileProvider config, ComponentConstructorsProvider componentConstructorsProvider) {
-
-
-
-        final DefaultSpeedmentApplicationLifecycle lifecycle = new DefaultSpeedmentApplicationLifecycle(config.getAccessibleFileOrNull());
-        componentConstructorsProvider.getComponentConstructors().forEach(lifecycle::with);
-        return lifecycle.build();
-    }
+//
+//    public static Speedment initialize(ConfigFileProvider config, ComponentConstructorsProvider componentConstructorsProvider) {
+//
+//
+//
+//        final DefaultSpeedmentApplicationLifecycle lifecycle = new DefaultSpeedmentApplicationLifecycle(config.getAccessibleFileOrNull());
+//        componentConstructorsProvider.getComponentConstructors().forEach(lifecycle::with);
+//        return lifecycle.build();
+//    }
 }

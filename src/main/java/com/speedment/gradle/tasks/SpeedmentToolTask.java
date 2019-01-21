@@ -15,45 +15,36 @@
  */
 package com.speedment.gradle.tasks;
 
-import com.speedment.gradle.utils.ComponentConstructorsProvider;
-import com.speedment.gradle.utils.ConfigFileProvider;
-import com.speedment.gradle.utils.SpeedmentInitializer;
+import com.speedment.common.injector.Injector;
 import com.speedment.runtime.core.Speedment;
 import com.speedment.tool.core.MainApp;
-import org.gradle.api.DefaultTask;
-import org.gradle.api.tasks.TaskAction;
+import javafx.application.Application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static javafx.application.Application.launch;
 
 /**
  * @author Sergio Figueras (sergio@yourecm.com)
  * @author Emil Forslund
  */
-public class SpeedmentToolTask extends DefaultTask {
+public class SpeedmentToolTask extends AbstractSpeedmentTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SpeedmentToolTask.class);
-    public static final String SPEEDMENT_GUI_TASK_NAME = "speedment.tool";
+    public static final String SPEEDMENT_TOOL_TASK_NAME = "speedment.tool";
 
-    @TaskAction
-    protected void openGui() {
-        ConfigFileProvider config = ConfigFileProvider.create(getProject());
-        ComponentConstructorsProvider componentConstructors = ComponentConstructorsProvider.create(getProject());
-        LOGGER.info("Starting GUI using {} config file and {} component constructors.", config, componentConstructors);
+    @Override
+    protected void execute(Speedment speedment) {
+        final Injector injector = speedment.getOrThrow(Injector.class);
+        MainApp.setInjector(injector);
 
-        Speedment speedment = SpeedmentInitializer.initialize(config, componentConstructors);
-
-        MainApp.setSpeedment(speedment);
-        if (config.canAccess()) {
-            launch(MainApp.class, config.getAbsolutePath());
+        if (hasConfigFile()) {
+            Application.launch(MainApp.class, configLocation().toAbsolutePath().toString());
         } else {
-            launch(MainApp.class);
+            Application.launch(MainApp.class);
         }
     }
 
     @Override
     public String getDescription() {
-        return "Opens Speedment GUI.";
+        return "Opens Speedment Tool.";
     }
 }

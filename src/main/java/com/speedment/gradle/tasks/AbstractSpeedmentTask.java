@@ -5,18 +5,23 @@ import com.speedment.generator.translator.internal.component.CodeGenerationCompo
 import com.speedment.gradle.utils.StringUtils;
 import com.speedment.runtime.application.ApplicationBuilders;
 import com.speedment.runtime.core.ApplicationBuilder;
+import com.speedment.runtime.core.Speedment;
 import com.speedment.tool.core.ToolBundle;
 import com.speedment.tool.core.internal.component.UserInterfaceComponentImpl;
 import org.gradle.api.DefaultTask;
+import org.gradle.api.InvalidUserDataException;
 import org.gradle.api.tasks.Input;
+import org.gradle.api.tasks.TaskAction;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static com.speedment.runtime.application.internal.DefaultApplicationMetadata.METADATA_LOCATION;
 import static com.speedment.tool.core.internal.util.ConfigFileHelper.DEFAULT_CONFIG_LOCATION;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Emil Forslund
@@ -25,6 +30,9 @@ import static com.speedment.tool.core.internal.util.ConfigFileHelper.DEFAULT_CON
 abstract class AbstractSpeedmentTask extends DefaultTask {
 
     private static final Path DEFAULT_CONFIG = Paths.get(DEFAULT_CONFIG_LOCATION);
+    private static final Consumer<ApplicationBuilder<?, ?>> NOTHING = builder -> {};
+
+    private final Consumer<ApplicationBuilder<?, ?>> configurer;
 
     private String configFile;
     private boolean debug;
@@ -36,6 +44,14 @@ abstract class AbstractSpeedmentTask extends DefaultTask {
     private String[] components;
     // private Mapping[] typeMappers;
     // private ConfigParam[] parameters;
+
+    AbstractSpeedmentTask() {
+        this(NOTHING);
+    }
+
+    AbstractSpeedmentTask(Consumer<ApplicationBuilder<?, ?>> configurer) {
+        this.configurer = requireNonNull(configurer);
+    }
 
     @Input
     public String getConfigFile() {
@@ -109,6 +125,29 @@ abstract class AbstractSpeedmentTask extends DefaultTask {
         this.components = components;
     }
 
+    protected abstract void execute(Speedment speedment);
+
+    @TaskAction
+    public void execute() {
+        final ApplicationBuilder<?, ?> builder = createBuilder();
+
+        // TODO: Investigate if project path needs to be added
+        //builder.withComponent(MavenPathComponent.class);
+        //builder.withParam(MAVEN_BASE_DIR, project().getBasedir().toString());
+
+        configurer.accept(builder);
+
+        if (isDebug()) {
+            builder.withLogging(ApplicationBuilder.LogType.APPLICATION_BUILDER);
+        }
+
+        builder.withSkipCheckDatabaseConnectivity();
+        final Speedment speedment = builder.build();
+
+        getLogger().info(getDescription());
+        execute(speedment);
+    }
+
     protected Path configLocation() {
         final String top = Optional.ofNullable(getConfigFile())
             .map(String::trim)
@@ -139,6 +178,14 @@ abstract class AbstractSpeedmentTask extends DefaultTask {
             return false;
         } else {
             return true;
+        }
+    }
+
+    protected final void assertHasConfigFile() {
+        if (!hasConfigFile()) {
+            final String err = "To run speedment:generate a valid configFile needs to be specified.";
+            getLogger().error(err);
+            throw new InvalidUserDataException(err);
         }
     }
 
