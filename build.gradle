@@ -6,7 +6,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath "com.gradle.publish:plugin-publish-plugin:0.9.4"
+        classpath "com.gradle.publish:plugin-publish-plugin:0.10.0"
     }
 }
 
@@ -14,8 +14,8 @@ apply plugin: "com.gradle.plugin-publish"
 apply plugin: 'java'
 apply plugin: 'maven'
 
-group = 'com.speedment.gradle'
-version = '2.3.5'
+group = 'com.speedment'
+version = '3.1.9'
 description='Gradle Support for Speedment.'
 
 repositories {
@@ -25,23 +25,23 @@ repositories {
 
 dependencies {
     compile gradleApi()
-    compile "com.speedment:speedment:${version}"
+    compile "com.speedment:tool:${version}"
     testCompile 'junit:junit:4.12'
 }
 
 jar {
-    baseName = 'SpeedmentGradlePlugin'
+    baseName = 'speedment-gradle-plugin'
 }
 
 pluginBundle {
-    website = 'http://www.speedment.com/'
+    website = 'https://www.speedment.com/'
     vcsUrl = 'https://github.com/speedment'
-    description = 'Wrap your Database in Java 8'
+    description = 'Stream-based ORM'
     tags = ['database', 'speedment']
 
     plugins {
         SpeedmentGradlePlugin {
-            id = 'com.speedment.gradle'
+            id = 'com.speedment'
             displayName = 'Speedment Gradle Plugin'
         }
     }

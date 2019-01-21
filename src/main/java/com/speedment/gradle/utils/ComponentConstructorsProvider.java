@@ -15,7 +15,6 @@
  */
 package com.speedment.gradle.utils;
 
-import com.speedment.component.ComponentConstructor;
 import org.gradle.api.Project;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

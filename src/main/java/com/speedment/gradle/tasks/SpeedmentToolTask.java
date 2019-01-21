@@ -15,11 +15,11 @@
  */
 package com.speedment.gradle.tasks;
 
-import com.speedment.Speedment;
 import com.speedment.gradle.utils.ComponentConstructorsProvider;
 import com.speedment.gradle.utils.ConfigFileProvider;
 import com.speedment.gradle.utils.SpeedmentInitializer;
-import com.speedment.internal.ui.MainApp;
+import com.speedment.runtime.core.Speedment;
+import com.speedment.tool.core.MainApp;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
 import org.slf4j.Logger;
@@ -29,11 +29,12 @@ import static javafx.application.Application.launch;
 
 /**
  * @author Sergio Figueras (sergio@yourecm.com)
+ * @author Emil Forslund
  */
-public class SpeedmentGuiTask extends DefaultTask {
+public class SpeedmentToolTask extends DefaultTask {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SpeedmentGuiTask.class);
-    public static final String SPEEDMENT_GUI_TASK_NAME = "speedment.Gui";
+    private static final Logger LOGGER = LoggerFactory.getLogger(SpeedmentToolTask.class);
+    public static final String SPEEDMENT_GUI_TASK_NAME = "speedment.tool";
 
     @TaskAction
     protected void openGui() {

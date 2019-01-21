@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.nio.file.Path;
 
-import static com.speedment.internal.ui.UISession.DEFAULT_CONFIG_LOCATION;
+import static com.speedment.tool.core.internal.util.ConfigFileHelper.DEFAULT_CONFIG_LOCATION;
 
 public class ConfigFileProvider {
 

@@ -17,7 +17,7 @@
 package com.speedment.gradle.plugins;
 
 import com.speedment.gradle.tasks.SpeedmentGenerateTask;
-import com.speedment.gradle.tasks.SpeedmentGuiTask;
+import com.speedment.gradle.tasks.SpeedmentToolTask;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 
@@ -29,7 +29,7 @@ public class SpeedmentPlugin implements Plugin<Project> {
 
     @Override
     public void apply(Project target) {
-        target.getTasks().create(SpeedmentGuiTask.SPEEDMENT_GUI_TASK_NAME, SpeedmentGuiTask.class);
+        target.getTasks().create(SpeedmentToolTask.SPEEDMENT_GUI_TASK_NAME, SpeedmentToolTask.class);
         target.getTasks().create(SpeedmentGenerateTask.SPEEDMENT_GENERATE_TASK_NAME, SpeedmentGenerateTask.class);
     }
 

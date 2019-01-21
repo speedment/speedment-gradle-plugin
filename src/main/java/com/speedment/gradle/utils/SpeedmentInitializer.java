@@ -15,12 +15,15 @@
  */
 package com.speedment.gradle.utils;
 
-import com.speedment.Speedment;
-import com.speedment.internal.core.runtime.DefaultSpeedmentApplicationLifecycle;
+
+import com.speedment.runtime.core.Speedment;
 
 public class SpeedmentInitializer {
 
     public static Speedment initialize(ConfigFileProvider config, ComponentConstructorsProvider componentConstructorsProvider) {
+
+
+
         final DefaultSpeedmentApplicationLifecycle lifecycle = new DefaultSpeedmentApplicationLifecycle(config.getAccessibleFileOrNull());
         componentConstructorsProvider.getComponentConstructors().forEach(lifecycle::with);
         return lifecycle.build();

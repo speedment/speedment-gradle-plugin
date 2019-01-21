@@ -15,13 +15,13 @@
  */
 package com.speedment.gradle.tasks;
 
-import com.speedment.Speedment;
-import com.speedment.config.db.Project;
 import com.speedment.gradle.utils.ComponentConstructorsProvider;
 import com.speedment.gradle.utils.ConfigFileProvider;
 import com.speedment.gradle.utils.SpeedmentInitializer;
-import com.speedment.internal.core.config.db.immutable.ImmutableProject;
-import com.speedment.internal.util.document.DocumentTranscoder;
+import com.speedment.runtime.config.Project;
+import com.speedment.runtime.config.internal.immutable.ImmutableProject;
+import com.speedment.runtime.config.util.DocumentTranscoder;
+import com.speedment.runtime.core.Speedment;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * @author Sergio Figueras (sergio@yourecm.com)
  */
 public class SpeedmentGenerateTask extends DefaultTask {
-
+//
     private static final Logger LOGGER = LoggerFactory.getLogger(SpeedmentGenerateTask.class);
     public static final String SPEEDMENT_GENERATE_TASK_NAME = "speedment.Generate";
 
