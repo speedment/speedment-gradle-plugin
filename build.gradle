@@ -1,22 +1,11 @@
-
-buildscript {
-    repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-    dependencies {
-        classpath "com.gradle.publish:plugin-publish-plugin:0.10.0"
-    }
+plugins {
+    id 'java'
+    id 'java-gradle-plugin'
+    id 'maven-publish'
 }
 
-apply plugin: "com.gradle.plugin-publish"
-apply plugin: 'java'
-apply plugin: 'maven'
-
-group = 'com.speedment'
-version = '3.1.9'
-description='Gradle Support for Speedment.'
+group    = 'com.speedment'
+version  = '3.1.9'
 
 repositories {
     mavenCentral()
@@ -30,10 +19,25 @@ dependencies {
     testCompile group: 'commons-io', name: 'commons-io', version: '2.6'
 }
 
-jar {
-    baseName = 'speedment-gradle-plugin'
+gradlePlugin {
+    plugins {
+        speedmentPlugin {
+            id = 'speedment-gradle-plugin'
+            implementationClass = 'com.speedment.gradle.plugins.SpeedmentPlugin'
+        }
+    }
 }
 
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifactId 'speedment-gradle-plugin'
+            from       components.java
+        }
+    }
+}
+
+/*
 pluginBundle {
     website = 'https://www.speedment.com/'
     vcsUrl = 'https://github.com/speedment'
@@ -42,8 +46,9 @@ pluginBundle {
 
     plugins {
         SpeedmentGradlePlugin {
-            id = 'com.speedment'
+            id = 'com.speedment.gradle'
             displayName = 'Speedment Gradle Plugin'
         }
     }
 }
+*/
