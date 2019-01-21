@@ -13,6 +13,7 @@ import org.gradle.api.InvalidUserDataException;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,7 +35,7 @@ abstract class AbstractSpeedmentTask extends DefaultTask {
 
     private final Consumer<ApplicationBuilder<?, ?>> configurer;
 
-    private String configFile;
+    private File configFile;
     private boolean debug;
     private String dbmsHost;
     private int dbmsPort;
@@ -54,11 +55,11 @@ abstract class AbstractSpeedmentTask extends DefaultTask {
     }
 
     @Input
-    public String getConfigFile() {
+    public File getConfigFile() {
         return configFile;
     }
 
-    public void setConfigFile(String configFile) {
+    public void setConfigFile(File configFile) {
         this.configFile = configFile;
     }
 
@@ -149,12 +150,9 @@ abstract class AbstractSpeedmentTask extends DefaultTask {
     }
 
     protected Path configLocation() {
-        final String top = Optional.ofNullable(getConfigFile())
-            .map(String::trim)
-            .filter(s -> !s.isEmpty())
-            .orElse(DEFAULT_CONFIG_LOCATION);
-
-        return getProject().getProjectDir().toPath().resolve(top);
+        return Optional.ofNullable(getConfigFile())
+            .orElseGet(() -> new File(DEFAULT_CONFIG_LOCATION))
+            .toPath();
     }
 
     protected final boolean hasConfigFile() {
