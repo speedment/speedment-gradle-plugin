@@ -16,8 +16,6 @@
 package com.speedment.gradle.tasks;
 
 import com.speedment.gradle.plugins.SpeedmentPlugin;
-import com.speedment.gradle.utils.ComponentConstructorsProvider;
-import com.speedment.gradle.utils.ConfigFileProvider;
 import com.speedment.gradle.utils.TestUtils;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.Project;
@@ -30,7 +28,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
@@ -60,11 +57,8 @@ public class SpeedmentGenerateTest {
 
     @Test
     public void generateCodeTest() {
-        SpeedmentGenerateTask task = getTask(testProject);
-        ConfigFileProvider config = new ConfigFileProvider(configFile.getAbsolutePath());
-        ComponentConstructorsProvider componentConstructors = new ComponentConstructorsProvider(Collections.emptyList());
-
-        task.generateCode(config, componentConstructors);
+        final SpeedmentGenerateTask task = getTask(testProject);
+        task.execute();
 
         Assert.assertTrue(targetDirectory.exists());
         Assert.assertTrue(new File(targetDirectory, "com").exists());

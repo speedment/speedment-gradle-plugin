@@ -15,7 +15,7 @@
  */
 package com.speedment.gradle.utils;
 
-import org.apache.commons.lang.Validate;
+import org.junit.Assert;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class TestUtils {
 
     public static File createTempConfigFile(File targetDirectory) {
         URL url = TestUtils.class.getClassLoader().getResource(CONFIG_FILE_PATTERN_NAME);
-        Validate.notNull(url);
+        Assert.assertNotNull(url);
 
         File configFile;
         try {

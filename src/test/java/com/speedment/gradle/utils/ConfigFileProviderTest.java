@@ -22,7 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static com.speedment.gradle.utils.ConfigFileProvider.CONFIG_PATH_PROPERTY;
-import static com.speedment.internal.ui.UISession.DEFAULT_CONFIG_LOCATION;
+import static com.speedment.tool.core.internal.util.ConfigFileHelper.DEFAULT_CONFIG_LOCATION;
 
 public class ConfigFileProviderTest {
 
