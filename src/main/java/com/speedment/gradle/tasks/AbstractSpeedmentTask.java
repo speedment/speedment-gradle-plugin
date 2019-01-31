@@ -12,17 +12,18 @@ import org.gradle.api.DefaultTask;
 import org.gradle.api.InvalidUserDataException;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.tasks.Optional;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import static com.speedment.runtime.application.internal.DefaultApplicationMetadata.METADATA_LOCATION;
 import static com.speedment.tool.core.internal.util.ConfigFileHelper.DEFAULT_CONFIG_LOCATION;
 import static java.util.Objects.requireNonNull;
+import static java.util.Optional.ofNullable;
 
 /**
  * @author Emil Forslund
@@ -54,7 +55,7 @@ abstract class AbstractSpeedmentTask extends DefaultTask {
         this.configurer = requireNonNull(configurer);
     }
 
-    @Input
+    @Optional @Input
     public File getConfigFile() {
         return configFile;
     }
@@ -72,7 +73,7 @@ abstract class AbstractSpeedmentTask extends DefaultTask {
         this.debug = debug;
     }
 
-    @Input
+    @Optional @Input
     public String getDbmsHost() {
         return dbmsHost;
     }
@@ -81,7 +82,7 @@ abstract class AbstractSpeedmentTask extends DefaultTask {
         this.dbmsHost = dbmsHost;
     }
 
-    @Input
+    @Optional @Input
     public int getDbmsPort() {
         return dbmsPort;
     }
@@ -90,7 +91,7 @@ abstract class AbstractSpeedmentTask extends DefaultTask {
         this.dbmsPort = dbmsPort;
     }
 
-    @Input
+    @Optional @Input
     public String getDbmsUsername() {
         return dbmsUsername;
     }
@@ -99,7 +100,7 @@ abstract class AbstractSpeedmentTask extends DefaultTask {
         this.dbmsUsername = dbmsUsername;
     }
 
-    @Input
+    @Optional @Input
     public String getDbmsPassword() {
         return dbmsPassword;
     }
@@ -108,7 +109,7 @@ abstract class AbstractSpeedmentTask extends DefaultTask {
         this.dbmsPassword = dbmsPassword;
     }
 
-    @Input
+    @Optional @Input
     public String getDbmsConnectionUrl() {
         return dbmsConnectionUrl;
     }
@@ -117,7 +118,7 @@ abstract class AbstractSpeedmentTask extends DefaultTask {
         this.dbmsConnectionUrl = dbmsConnectionUrl;
     }
 
-    @Input
+    @Optional @Input
     public String[] getComponents() {
         return components;
     }
@@ -150,7 +151,7 @@ abstract class AbstractSpeedmentTask extends DefaultTask {
     }
 
     protected Path configLocation() {
-        return Optional.ofNullable(getConfigFile())
+        return ofNullable(getConfigFile())
             .orElseGet(() -> new File(DEFAULT_CONFIG_LOCATION))
             .toPath();
     }
