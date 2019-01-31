@@ -5,3 +5,4 @@ build/
 *.iml
 tmp/
 out/
+local.properties
